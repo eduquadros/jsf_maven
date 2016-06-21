@@ -9,9 +9,14 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.ForeignKey;
 
 
 
@@ -41,7 +46,40 @@ public class Endereco implements Serializable{
     @Column(name="Complemento", nullable= false, length = 80)
     private String complemento;
 
+@OneToOne(optional=true, fetch= FetchType.LAZY)
+    @ForeignKey(name="EnderecoPessoa")
+    @JoinColumn(name = "IdPessoa", referencedColumnName = "IdPessoa")
+    private Pessoa pessoa;
+    
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ForeignKey(name="EnderecoTipoLogradouro")
+    @JoinColumn(name = "IdTipoLogradouro", referencedColumnName = "IdTipoLogradouro")
+    private TipoLogradouro tipologradouro;
+    
+    @ManyToOne(optional=false, fetch = FetchType.LAZY)
+    @ForeignKey(name="EnderecoEstado")
+    @JoinColumn(name = "IdEstado", nullable = false)
+    private Estado estado;
+        
+    @ManyToOne(optional=false, fetch = FetchType.LAZY)
+    @ForeignKey(name="EnderecoTipoEndereco")
+    @JoinColumn(name = "IdTipoEndereco", referencedColumnName="IdTipoEndereco")
+    private TipoEndereco tipoendereco;
+    
+    @ManyToOne(optional=false, fetch = FetchType.LAZY)
+    @ForeignKey(name="EnderecoCidade")
+    @JoinColumn(name = "IdCidade", referencedColumnName="IdCidade")
+    private Cidade cidade;   
+    
+    
+    
+    
     public Endereco() {
+        this.cidade = new Cidade();
+        this.estado = new Estado();
+        this.tipologradouro = new TipoLogradouro();
+        this.tipoendereco = new TipoEndereco();
+        this.pessoa = new Pessoa();
     }
 
     public Integer getIdEndereco() {
@@ -92,6 +130,48 @@ public class Endereco implements Serializable{
         this.complemento = complemento;
     }
 
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+    }
+
+    public TipoLogradouro getTipologradouro() {
+        return tipologradouro;
+    }
+
+    public void setTipologradouro(TipoLogradouro tipologradouro) {
+        this.tipologradouro = tipologradouro;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
+    public TipoEndereco getTipoendereco() {
+        return tipoendereco;
+    }
+
+    public void setTipoendereco(TipoEndereco tipoendereco) {
+        this.tipoendereco = tipoendereco;
+    }
+
+    public Cidade getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(Cidade cidade) {
+        this.cidade = cidade;
+    }
+
+    
+    
     @Override
     public int hashCode() {
         int hash = 3;
